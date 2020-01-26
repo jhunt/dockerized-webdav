@@ -14,5 +14,6 @@ RUN apk add nginx nginx-mod-http-dav-ext \
  && rm -rf /var/cache/apk/* \
  && mkdir -p /davroot
 
-COPY nginx.conf /etc/nginx/nginx.conf
-ENTRYPOINT ["nginx", "-g", "daemon off;"]
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY nginx.conf    /etc/nginx/nginx.conf
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
