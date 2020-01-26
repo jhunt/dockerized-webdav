@@ -9,10 +9,27 @@ To run it:
 
     docker run --rm -it filefrog/webdav [options]
 
-The baked-in nginx configuration will include `/conf/*.conf` at
-the default `server` level, allowing you some modicum of control
-over the behavior of nginx / WebDAV; I use this to inject
-HTTP Basic Authentication requirements to protect WebDAV hosts.
+In most cases, you will want to bind-mount in something external
+to the container at `/davroot`, since this is where nginx will
+expect to find files to serve up.
+
+
+User Permissions and Uploaded Files
+-----------------------------------
+
+The nginx  in this container runs as the custom user `www:www`,
+which defaults to a UID of 65500, and the same for a GID.  Because
+nginx has some sever issues running (out of the gate) as a
+non-root account -- specifically, `load_module` will always fail
+-- we drop privileges to this account for normal operations.
+
+If you need to specify an alternate UID / GID to better match up
+to file ownership and access control lists, you can use the
+following environment variables:
+
+  - `NGINX_UID` - The numeric user ID for the `www` nginx user.
+  - `NGINX_GID` - The numberic group ID for the `www` nginx group.
+
 
 Custom nginx Configuration
 --------------------------

@@ -12,7 +12,10 @@ LABEL maintainer="James Hunt <images@huntprod.com>" \
 
 RUN apk add nginx nginx-mod-http-dav-ext \
  && rm -rf /var/cache/apk/* \
- && mkdir -p /davroot
+ && mkdir -p /davroot \
+ && echo 'www:x:65500:65500:www:/var/www/html:/sbin/nologin' >>/etc/passwd \
+ && echo 'www:x:65500:www' >>/etc/group \
+ && sed -i -e 's|^\(nginx:x:.*:nginx\)$|\1,www|' /etc/group
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 COPY nginx.conf    /etc/nginx/nginx.conf
